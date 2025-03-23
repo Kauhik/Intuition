@@ -1,0 +1,22 @@
+version: '3.9'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${BACKEND_PORT:-7001}:${BACKEND_PORT:-7001}"
+    command: poetry run uvicorn main:app --host 0.0.0.0 --port ${BACKEND_PORT:-7001}
+    restart: always
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:5173"
+    environment:
+      - VITE_WS_BACKEND_URL=wss://${DOMAIN:-localhost}:${BACKEND_PORT:-7001}
+      - VITE_BACKEND_URL=https://${DOMAIN:-localhost}:${BACKEND_PORT:-7001}
+    restart: always 
