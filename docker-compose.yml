@@ -1,0 +1,32 @@
+version: '3.9'
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    # or
+    # environment:
+    #  - BACKEND_PORT=7001 # if you change the port, make sure to also change the VITE_WS_BACKEND_URL at frontend/.env.local
+    #  - OPENAI_API_KEY=your_openai_api_key
+    ports:
+      - "${BACKEND_PORT:-7001}:${BACKEND_PORT:-7001}"
+    command: poetry run uvicorn main:app --host 0.0.0.0 --port ${BACKEND_PORT:-7001}
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    # Add the following lines for camera access
+    devices:
+      - /dev/video0:/dev/video0  # For Linux hosts
+    # For macOS, we need special handling with privileged mode
+    privileged: true  # This gives extended permissions on macOS
+    environment:
+      - DISPLAY=${DISPLAY}  # Forward display environment variable
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix  # For display forwarding
+      # For macOS specific camera access (if running on Mac)
+      - /dev/video:/dev/video  # Generic device mapping attempt for macOS
