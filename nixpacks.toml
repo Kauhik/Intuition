@@ -4,7 +4,7 @@ nixPkgs = ['nodejs', 'yarn', 'python39', 'poetry']
 [phases.install]
 cmds = [
   'cd frontend && yarn install && yarn build',
-  'cd backend && poetry install'
+  'cd backend && poetry config virtualenvs.create false && poetry install --no-root'
 ]
 
 [start]
