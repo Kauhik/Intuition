@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useDropzone } from "react-dropzone";
 import { toast } from "react-hot-toast";
-import { URLS } from "../urls";
 import ScreenRecorder from "./recording/ScreenRecorder";
 import CameraCapture from "./CameraCapture";
 import { ScreenRecorderState } from "../types";
